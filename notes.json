@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "title": "Introduction to Physics",
+    "subject": "Physics",
+    "class": "Class 9",
+    "description": "Basic concepts of physics including motion, force, and energy.",
+    "date": "2024-03-15",
+    "downloadLink": "https://drive.google.com/file/d/example1"
+  },
+  {
+    "id": 2,
+    "title": "World War II",
+    "subject": "History",
+    "class": "Class 10",
+    "description": "Comprehensive notes on World War II, its causes, and consequences.",
+    "date": "2024-03-14",
+    "downloadLink": "https://drive.google.com/file/d/example2"
+  },
+  {
+    "id": 3,
+    "title": "Chemical Bonding",
+    "subject": "Chemistry",
+    "class": "Class 11",
+    "description": "Detailed notes on different types of chemical bonds and their properties.",
+    "date": "2024-03-13",
+    "downloadLink": "https://drive.google.com/file/d/example3"
+  },
+  {
+    "id": 4,
+    "title": "Calculus Basics",
+    "subject": "Mathematics",
+    "class": "Class 12",
+    "description": "Introduction to differential and integral calculus with examples.",
+    "date": "2024-03-12",
+    "downloadLink": "https://drive.google.com/file/d/example4"
+  }
+] 
