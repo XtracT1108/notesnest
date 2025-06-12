@@ -1,0 +1,203 @@
+# Step-by-Step Guide: Building a Notes Marketplace Website (notes.pratik.run.place)
+
+---
+
+## 1. Project Overview
+- **Goal:** Marketplace for notes. Admin uploads notes (PDFs), students subscribe (via UPI) to view/offline notes. Admin dashboard for management. Hosted on GitHub Pages with custom domain.
+- **Tech Stack:**
+  - **Frontend:** Next.js 14, shadcn/ui, React Query, Zustand, react-pdf, PWA
+  - **Auth/DB/Storage:** Supabase
+  - **Payments:** Razorpay (UPI)
+  - **Serverless Functions:** Vercel/Netlify (for payment/subscription logic)
+  - **Hosting:** GitHub Pages (static export)
+
+---
+
+## 2. Prerequisites
+- Node.js (v18+)
+- Git & GitHub account
+- Supabase account
+- Razorpay account
+- Vercel/Netlify account (for serverless functions)
+- Custom domain access (run.place)
+
+---
+
+## 3. Project Setup
+
+### 3.1. Initialize Next.js Project
+```bash
+npx create-next-app@latest notesnest --typescript
+cd notesnest
+```
+
+### 3.2. Install Dependencies
+```bash
+# UI & State
+pnpm add shadcn-ui @radix-ui/react-dialog zustand @tanstack/react-query
+# PDF Viewer
+pnpm add @react-pdf-viewer/core @react-pdf-viewer/default-layout
+# Auth, DB, Storage
+pnpm add @supabase/supabase-js
+# Payments
+pnpm add razorpay
+# PWA
+pnpm add next-pwa
+```
+
+### 3.3. Set Up shadcn/ui
+```bash
+npx shadcn-ui@latest init
+```
+Follow prompts to set up the UI library.
+
+---
+
+## 4. Supabase Setup
+
+### 4.1. Create Project
+- Go to [Supabase](https://supabase.com/), create a new project.
+- Note the **Project URL** and **anon/public key**.
+
+### 4.2. Set Up Auth
+- Enable email/password and social logins (Google, etc.) in Supabase Auth settings.
+
+### 4.3. Set Up Database Tables
+- **users** (auto-managed by Supabase)
+- **notes**: id, title, description, pdf_url, created_at
+- **subscriptions**: id, user_id, status, start_date, end_date, payment_id
+
+### 4.4. Set Up Storage
+- Create a "notes" bucket for PDF uploads.
+
+---
+
+## 5. Razorpay Setup (UPI Payments)
+
+### 5.1. Create Razorpay Account
+- Go to [Razorpay](https://razorpay.com/), create an account.
+- Get **Key ID** and **Key Secret** from dashboard.
+
+### 5.2. Webhook Setup
+- Set up a webhook endpoint (to be deployed on Vercel/Netlify) to listen for payment success events.
+
+---
+
+## 6. Next.js App Structure
+
+- `/app` (Next.js App Router)
+  - `/admin` (Admin dashboard, protected)
+  - `/notes` (List/browse notes)
+  - `/profile` (User profile, subscription status)
+  - `/login`, `/signup` (Auth pages)
+- `/components` (UI components)
+- `/lib` (Supabase, Razorpay, helpers)
+- `/public` (static assets)
+
+---
+
+## 7. Implementing Features
+
+### 7.1. Authentication
+- Use `@supabase/supabase-js` for sign up, login, session management.
+- Protect routes (admin, notes) based on user role/subscription.
+
+### 7.2. Notes Marketplace
+- Admin uploads PDFs (stored in Supabase Storage, metadata in DB).
+- Students can browse/search notes.
+- Only subscribed users can view/download PDFs.
+- Use `react-pdf` for in-browser PDF viewing.
+
+### 7.3. Payments & Subscription
+- Integrate Razorpay checkout for UPI payments.
+- On payment success, webhook updates subscription status in Supabase.
+- Show subscription status in user profile.
+
+### 7.4. Offline/PWA Support
+- Configure `next-pwa` for offline access to PDFs (cache PDFs for subscribed users).
+
+### 7.5. Admin Dashboard
+- CRUD for notes (upload, edit, delete)
+- Manage users & subscriptions
+- View payment history
+
+---
+
+## 8. Serverless Functions (Vercel/Netlify)
+
+- Deploy API endpoints for:
+  - Razorpay webhook (update subscription on payment success)
+  - Admin actions (optional, for extra security)
+- Example: `/api/razorpay-webhook.ts`
+
+---
+
+## 9. Deployment
+
+### 9.1. Static Export for GitHub Pages
+```bash
+# In next.config.js
+const withPWA = require('next-pwa')({ dest: 'public' })
+module.exports = withPWA({
+  output: 'export',
+  // ...other config
+})
+
+# Export static site
+pnpm run build
+pnpm run export
+```
+- The static site will be in the `out/` directory.
+
+### 9.2. Deploy to GitHub Pages
+- Push `out/` to `gh-pages` branch or use GitHub Actions for auto-deploy.
+- Set up GitHub Pages in repo settings to serve from `gh-pages` branch.
+
+### 9.3. Custom Domain Setup
+- In GitHub Pages settings, set custom domain to `notes.pratik.run.place`.
+- Update DNS records (CNAME/A) at your domain provider to point to GitHub Pages.
+
+### 9.4. Deploy Serverless Functions
+- Deploy your API endpoints (webhooks, etc.) to Vercel/Netlify.
+- Update Razorpay webhook URL to point to deployed endpoint.
+
+---
+
+## 10. Final Touches
+- Test all flows: signup, payment, subscription, PDF viewing/offline, admin actions.
+- Add analytics (e.g., Vercel Analytics, Plausible).
+- Write documentation for future maintenance.
+
+---
+
+## 11. Resources
+- [Next.js Docs](https://nextjs.org/docs)
+- [shadcn/ui Docs](https://ui.shadcn.com/docs)
+- [Supabase Docs](https://supabase.com/docs)
+- [Razorpay Docs](https://razorpay.com/docs/)
+- [GitHub Pages Docs](https://docs.github.com/en/pages)
+
+---
+
+## 12. Prompt for Coding AI
+
+You are a coding AI assistant. Your task is to implement the Notes Marketplace website as described in this guide. Follow these steps:
+
+1. **Coding Implementation:**
+   - Bootstrap a Next.js 14 project with TypeScript.
+   - Install and configure shadcn/ui, React Query, Zustand, react-pdf, and next-pwa.
+   - Set up Supabase for authentication, database, and storage.
+   - Integrate Razorpay for UPI payments.
+   - Implement the admin dashboard and notes marketplace features.
+   - Configure PWA for offline access.
+
+2. **Non-Coding Setup:**
+   - Guide the user on setting up their custom domain (notes.pratik.run.place).
+   - Assist with GitHub Pages deployment and DNS configuration.
+   - Help with Vercel/Netlify serverless function deployment.
+
+Provide clear, step-by-step instructions and code snippets for each part. Once coding is complete, guide the user through the remaining setup tasks.
+
+---
+
+**You now have a modern, scalable, and maintainable notes marketplace!**
