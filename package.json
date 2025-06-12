@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "homepage": "https://pratik.run.place",
+  "homepage": "https://notes.pratik.run.place",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
